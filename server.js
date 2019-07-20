@@ -68,6 +68,54 @@ app.get("/scrape", function(req, res) {
     });
 });
 
+// Route for getting all Articles from the db
+app.get("/articles", function(req, res) {
+    db.Article.find({}).then(function(dbArticle){
+        res.json(dbArticle);
+    }).catch(function(err) {
+        res.json(err);
+    });
+});
+
+// Route for grabbing a specific Article by id, populate it with its comments
+app.get("/articles/:id", function(req, res) {
+    db.Article.findOne({_id: req.params.id})
+    .populate("comments")
+    .then(function(dbArticle){
+        res.json(dbArticle);
+    }).catch(function(err) {
+        // If an error occurs, send the error back to the client
+        res.json(err);
+    });
+});
+
+// Route for adding comments
+app.post("/articles/:id", function(req, res) {
+    db.Comment.create(req.body)
+    .then(function(dbComment){
+        db.Article.updateOne(
+            {_id: req.params.id},
+            {$push: {comments: dbComment._id}},
+            {new: true}
+        )
+        .then(function(dbArticle){
+            res.json(dbArticle);
+        });
+    }).catch(function(err) {
+        res.json(err);
+    });
+});
+
+app.delete("/comments/:id", function(req, res){
+    console.log(req.params.id);
+    db.Comment.deleteOne({_id: req.params.id})
+    .then(function(dbComment){
+        res.json(dbComment);
+    }).catch(function(err) {
+        res.json(err);
+    });
+});
+
 // Start server
 app.listen(PORT, function() {
     console.log("App running on port 3000!");
