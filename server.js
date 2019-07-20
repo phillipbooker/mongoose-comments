@@ -10,7 +10,10 @@ const axios = require("axios");
 var db = require("./models");
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost/mongooseHwTest", { useNewUrlParser: true });
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongooseHwTest";
+// mongoose.connect(MONGODB_URI);
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Use handlebars and main layout
 const app = express();
