@@ -3,7 +3,7 @@ var currentArticleId;
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
     for (var i = 0; i < data.length; i++) {
-        $("#articles").append("<p class='art' data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+        $("#articles").append("<p class='art' data-id='" + data[i]._id + "'>" + data[i].title + "<br /><a href='" + data[i].link + "' target='_blank'>Read Article</a></p>");
     }
 });
 
@@ -11,27 +11,37 @@ $.getJSON("/articles", function(data) {
 function popComments(data){
     
     $("#comments").empty();
-    console.log(data);
-    $("#comments").append("<h2>" + data.title + "</h2>");
+    $("#comments").append("<h3>Comments for: " + data.title + "</h3>");
+    $("#comments").append("<hr>");
 
-    // An input to enter a new title
-    $("#comments").append("<input id='titleinput' name='title' >");
-    $("#comments").append("<textarea id='bodyinput' name='body'></textarea>");
-    $("#comments").append("<button data-id='" + currentArticleId + "' id='savenote'>Save Note</button>");
-
-    console.log("Data.comments: " + data.comments.length);
-    // console.log(data.comments[0].body);
     // If there's are comments on the article
     if (data.comments.length > 0) {
         for(var i = 0; i < data.comments.length; i++){
             var commentDiv = $("<div>").addClass("comment");
-            commentDiv.append("<p>" + data.comments[i].title +"</p>");
-            commentDiv.append("<p>" + data.comments[i].body +"</p>");
-            commentDiv.append("<button data-id='" + data.comments[i]._id + "' class='delete-comment'>X</button>")
+            commentDiv.append("<p>Title: " + data.comments[i].title +"</p>");
+            commentDiv.append("<p>Message: " + data.comments[i].body +"</p>");
+            commentDiv.append("<button data-id='" + data.comments[i]._id + "' class='delete-comment'>Delete comment</button>")
             commentDiv.append("<hr>");
             $("#comments").append(commentDiv);
         }
+    } else {
+        var commentDiv = $("<div>").addClass("comment");
+        commentDiv.append("<p><i>No comments yet...</i></p>");
+        commentDiv.append("<hr>");
+        $("#comments").append(commentDiv);
     }
+    
+    
+
+    // An input to enter a new title
+    $("#comments").append("<p>Comment title:</p>");
+    $("#comments").append("<input id='titleinput' name='title' >");
+    $("#comments").append("<p>Comment message:</p>");
+    $("#comments").append("<textarea id='bodyinput' name='body'></textarea>");
+    $("#comments").append("<br>");
+    $("#comments").append("<button data-id='" + currentArticleId + "' id='savecomment'>Add Comment</button>");
+    
+    
 }
 
 // Whenever someone clicks a p tag
@@ -49,8 +59,8 @@ $(document).on("click", "p.art", function() {
     });
 });
 
-// When you click the savenote button
-$(document).on("click", "#savenote", function() {
+// When you click the savecomment button
+$(document).on("click", "#savecomment", function() {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
     console.log("Button clicked this: " + thisId);

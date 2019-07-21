@@ -11,8 +11,6 @@ var db = require("./models");
 
 // Connect to MongoDB
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongooseHwTest";
-// mongoose.connect(MONGODB_URI);
-
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Use handlebars and main layout
