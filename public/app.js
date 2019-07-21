@@ -3,7 +3,7 @@ var currentArticleId;
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
     for (var i = 0; i < data.length; i++) {
-        $("#articles").append("<p class='art' data-id='" + data[i]._id + "'>" + data[i].title + "<br /><a href='" + data[i].link + "' target='_blank'>Read Article</a></p>");
+        $("#articles").append("<p class='art' data-id='" + data[i]._id + "'><span class='art-title'>" + data[i].title + "</span><br /><a href='" + data[i].link + "' target='_blank'>Read Article</a></p>");
     }
 });
 

@@ -2,6 +2,10 @@ body{
     background-image: url("/images/concrete-texture.png");
 }
 
+.art-title:hover{
+    color: blue;
+}
+
 .main-box{
     height: 400px;
     overflow-y: auto;
