@@ -14,7 +14,7 @@ function popComments(data){
     $("#comments").append("<h3>Comments for: " + data.title + "</h3>");
     $("#comments").append("<hr>");
 
-    // If there's are comments on the article
+    // If there are comments on the article
     if (data.comments.length > 0) {
         for(var i = 0; i < data.comments.length; i++){
             var commentDiv = $("<div>").addClass("comment");
@@ -33,7 +33,7 @@ function popComments(data){
     
     
 
-    // An input to enter a new title
+    // Inputs to enter new comment
     $("#comments").append("<p>Comment title:</p>");
     $("#comments").append("<input id='titleinput' name='title' >");
     $("#comments").append("<p>Comment message:</p>");
@@ -44,12 +44,12 @@ function popComments(data){
     
 }
 
-// Whenever someone clicks a p tag
+// When article p tag clicked
 $(document).on("click", "p.art", function() {
 
     var thisId = $(this).attr("data-id");
     currentArticleId = thisId;
-    console.log("In article click: " + currentArticleId);
+    
     $.ajax({
         method: "GET",
         url: "/articles/" + thisId
@@ -59,29 +59,25 @@ $(document).on("click", "p.art", function() {
     });
 });
 
-// When you click the savecomment button
+// When savecomment button clicked
 $(document).on("click", "#savecomment", function() {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
-    console.log("Button clicked this: " + thisId);
-    console.log("Button clicked current: " + currentArticleId);
-    // Run a POST request to change the note, using what's entered in the inputs
+    
+    // Run a POST request add a comment, using what's entered in the inputs
     $.ajax({
         method: "POST",
         url: "/articles/" + thisId,
         data: {
             // Value taken from title input
             title: $("#titleinput").val(),
-            // Value taken from note textarea
+            // Value taken from message textarea
             body: $("#bodyinput").val()
         }
     })
     // With that done
     .then(function(saved) {
         // Log the response
-        console.log(saved);
-
-        console.log("Saved note: " + thisId);
         $.ajax({
             method: "GET",
             url: "/articles/" + thisId
@@ -95,21 +91,16 @@ $(document).on("click", "#savecomment", function() {
     $("#bodyinput").val("");
 });
 
-// When you click a comment delete button
+// When comment delete button clicked
 $(document).on("click", ".delete-comment", function() {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
-    console.log("ID: " + thisId);
-    // Run a POST request to change the note, using what's entered in the inputs
+
     $.ajax({
         method: "DELETE",
         url: "/comments/" + thisId
     })
-    // With that done
     .then(function(data) {
-        // Log the response
-        console.log(data);
-        
         $.ajax({
             method: "GET",
             url: "/articles/" + currentArticleId
